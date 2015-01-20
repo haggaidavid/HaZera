@@ -16,5 +16,27 @@ namespace HaZera
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Random random = new Random();
+
+            List<SeedsBag> bags = new List<SeedsBag>();
+            for (int i = 1; i <= 10; ++i)
+            {
+                string name = "name" + i;
+                string field = "field" + i;
+                int seeds = random.Next(1, 12) * Tray.CellsInRow;
+                int samples_count = random.Next(0, 4);
+                string samples = "";
+                for (int s = 0; s < samples_count; ++s)
+                {
+                    samples += "s" + random.Next(0, 9) + ",";
+                }
+                SeedsBag bg = new SeedsBag(name, field, seeds, seeds, samples, "");
+                bags.Add(bg);
+            }
+
+        }
     }
 }
