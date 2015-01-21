@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace HaZera
 {
@@ -40,6 +41,15 @@ namespace HaZera
                     Samples.Add(s.Trim());
                 }
             }
+        }
+
+        public string AsString()
+        {
+            string str = "";
+
+            str = JsonConvert.SerializeObject(this);
+
+            return str;
         }
 
         public static readonly SeedsBag EmptyBag = new SeedsBag();

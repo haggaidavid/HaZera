@@ -35,7 +35,24 @@ namespace HaZera
                 }
                 SeedsBag bg = new SeedsBag(name, field, seeds, seeds, samples, "");
                 bags.Add(bg);
+                Console.WriteLine(bg.AsString());
             }
+
+            List<Tray> trays = new List<Tray>();
+            Tray tray = new Tray();
+            foreach (SeedsBag sb in bags)
+            {
+                int added = tray.AddSeedsFromBag(sb);
+                if (added < sb.SeedsToPlant)
+                {
+                    Console.WriteLine(tray.AsString());
+                    trays.Add(tray);
+                    tray = new Tray();
+                    tray.AddSeedsFromBag(sb, sb.SeedsToPlant - added);
+                }
+            }
+            Console.WriteLine(tray.AsString());
+            trays.Add(tray);
 
         }
     }

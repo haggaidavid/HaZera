@@ -50,5 +50,20 @@ namespace HaZera
 
             return seedsAdded;
         }
+
+        public string AsString()
+        {
+            string str = "";
+
+            str += "{";
+            for (int row = 0; row < NumberOfRows && row < Rows.Count; ++row)
+            {
+                SeedsBag sb = Rows[row];
+                str += sb.BagName + ",";
+            }
+
+            str += "}";
+            return str;
+        }
     }
 }
