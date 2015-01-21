@@ -11,15 +11,21 @@ namespace HaZera
         public const int NumberOfRows = 17;
         public const int CellsInRow = 11;
 
+        public string Name { get; set; }
+        private int m_nSeedsRows;
+        public int UsedRows { get { return m_nSeedsRows; } }
+
         private List<SeedsBag> m_rows;
         public List<SeedsBag> Rows 
         {
             get { return m_rows; } 
         }
 
-        public Tray()
+        public Tray(string name)
         {
+            Name = name;
             m_rows = new List<SeedsBag>();
+            m_nSeedsRows = 0;
         }
 
         public bool isFull()
@@ -40,6 +46,10 @@ namespace HaZera
                 // add a new row of seeds from this bag
                 m_rows.Add(bag);
                 seedsAdded += CellsInRow;
+                if (bag != SeedsBag.EmptyBag)
+                {
+                    m_nSeedsRows++;
+                }
             }
 
             if (!isFull())
@@ -59,7 +69,14 @@ namespace HaZera
             for (int row = 0; row < NumberOfRows && row < Rows.Count; ++row)
             {
                 SeedsBag sb = Rows[row];
-                str += sb.BagName + ",";
+                if (string.IsNullOrEmpty(sb.BagName))
+                {
+                    str += "-empty-,";
+                }
+                else
+                {
+                    str += sb.BagName + ",";
+                }
             }
 
             str += "}";

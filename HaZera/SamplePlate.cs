@@ -11,7 +11,9 @@ namespace HaZera
         public const int SamplesCapacity = 92;
 
         private SortedSet<string> m_Samples;
-        private List<Tuple<Tray, SeedsBag, int>> m_sourceBags;
+        private HashSet<Tray> m_sourceTrays;
+        private Dictionary<SeedsBag, int> m_sourceBags;
+
         private int m_nSeedsCount;
         public string Name { set; get; }
 
@@ -19,7 +21,8 @@ namespace HaZera
         {
             Name = name;
             m_Samples = new SortedSet<string>();
-            m_sourceBags = new List<Tuple<Tray, SeedsBag, int>>();
+            m_sourceTrays = new HashSet<Tray>();
+            m_sourceBags = new Dictionary<SeedsBag, int>();
             m_nSeedsCount = 0;
         }
 
@@ -42,12 +45,21 @@ namespace HaZera
             m_Samples.UnionWith(bag.Samples);
 
             // add source
-            added = m_nSeedsCount + count;
-            if (added > SamplesCapacity)
+            added = count;
+            if (m_nSeedsCount + added > SamplesCapacity)
             {
                 added = SamplesCapacity - m_nSeedsCount;
             }
-            m_sourceBags.Add(new Tuple<Tray,SeedsBag,int>(tray, bag, added));
+            m_sourceTrays.Add(tray);
+            if (!m_sourceBags.ContainsKey(bag))
+            {
+                m_sourceBags.Add(bag, added);
+            }
+            else
+            {
+                m_sourceBags[bag] += added;
+            }
+            m_nSeedsCount += added;
 
             return added;
         }
@@ -56,7 +68,7 @@ namespace HaZera
         {
             get
             {
-                return m_sourceBags.Count;
+                return m_sourceTrays.Count;
             }
         }
 
@@ -80,9 +92,21 @@ namespace HaZera
         {
             string str = "";
 
-            str += "SamplePlate " + Name + ": ";
-            str += "Count=" + SeedsCount + ", ";
-            str += "Samples=[" + string.Join(",", m_Samples) +"], ";
+            str += "{";
+            str += "Name=" + Name + ", ";
+            str += "count=" + SeedsCount + ", ";
+            str += "[" + string.Join(",", m_Samples) + "]";
+            str += " [";
+            foreach (Tray t in m_sourceTrays)
+            {
+                str += "<tray: " + t.Name + ">, ";
+            }
+            foreach (KeyValuePair<SeedsBag, int> kvp in m_sourceBags)
+            {
+                str += "<" + kvp.Key.BagName + ": " + kvp.Value + ">, ";
+            }
+            str += "] ";
+            str += "}";
 
             return str;
         }
