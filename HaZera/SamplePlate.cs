@@ -94,12 +94,21 @@ namespace HaZera
 
             str += "{";
             str += "Name=" + Name + ", ";
-            str += "count=" + SeedsCount + ", ";
+            if (SeedsCount == SamplesCapacity)
+            {
+                str += "FULL, ";
+            }
+            else
+            {
+                str += "count=" + SeedsCount + ", ";
+            }
+            str += "cost=" + SamplesToMake + ", ";
+
             str += "[" + string.Join(",", m_Samples) + "]";
             str += " [";
             foreach (Tray t in m_sourceTrays)
             {
-                str += "<tray: " + t.Name + ">, ";
+                str += "<tray#" + t.Name + ">, ";
             }
             foreach (KeyValuePair<SeedsBag, int> kvp in m_sourceBags)
             {

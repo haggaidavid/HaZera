@@ -14,15 +14,15 @@ namespace HaZera
         public string Comment { set; get; }
         public int SeedsToPlant { set; get; }
         public int SeedsToSample { set; get; }
-        public List<string> Samples { set; get; }
+        public SortedSet<string> Samples { set; get; }
 
         public SeedsBag()
         {
             BagName = "";
             FieldName = "";
             Comment = "";
-            SeedsToPlant = -1;
-            SeedsToSample = -1;
+            SeedsToPlant = 0;
+            SeedsToSample = 0;
             Samples = null;
         }
 
@@ -33,13 +33,19 @@ namespace HaZera
             Comment = comment;
             SeedsToPlant = toPlant;
             SeedsToSample = toSample;
-            Samples = new List<string>();
+            Samples = new SortedSet<string>();
             foreach (string s in samples.Split(','))
             {
                 if (!string.IsNullOrEmpty(s.Trim()))
                 {
                     Samples.Add(s.Trim());
                 }
+            }
+
+            // clear the number of seeds to sample in case there are no samples in the list
+            if (Samples.Count == 0)
+            {
+                SeedsToSample = 0;
             }
         }
 
